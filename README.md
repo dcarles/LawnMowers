@@ -17,7 +17,6 @@ Each mower will be finished sequentially, which means that the second mower won'
 
 ###OUTPUT
 The output for each mower should be its final co-ordinates and heading.
-INPUT AND OUTPUT
 
 ####Test Input:
 5 5
