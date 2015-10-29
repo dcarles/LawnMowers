@@ -39,22 +39,27 @@ namespace LawnMowers
             {
                 using (var writer = new StreamWriter(outputFilePath))
                 {
-                    var fieldSize = reader.ReadLine().Split(' ');
+                    var readLine = reader.ReadLine();
+                    if (readLine == null)
+                    {
+                        FinishProgram("Input file has no lines");
+                        return;
+                    }
+
+                    var fieldSize = readLine.Split(' ');
 
                     if (fieldSize.Length == 0)
                     {
-                        Console.WriteLine(
-                            "Invalid first line in the input file. Expected 2 numbers separated by a whitespace, for example: 5 5");
-                        Environment.Exit(0);
+                        FinishProgram("Invalid first line in the input file. Expected 2 numbers separated by a whitespace, for example: 5 5");
                     }
 
-                    var fieldSizeWidth = int.Parse(fieldSize[0]);
-                    var fieldSizeHeight = int.Parse(fieldSize[1]);
+                    var fieldWidth = int.Parse(fieldSize[0]);
+                    var fieldHeight = int.Parse(fieldSize[1]);
 
                     var lawnMowerIndex = 1;
                     while (!reader.EndOfStream)
                     {
-                        var position = reader.ReadLine().Split(' ');
+                        var position = readLine.Split(' ');
 
                         var x = 0;
                         var y = 0;
@@ -63,37 +68,42 @@ namespace LawnMowers
                         if (position.Length < 3 || !int.TryParse(position[0], out x) ||
                             !int.TryParse(position[1], out y) || !Enum.TryParse(position[2], out heading))
                         {
-                            Console.WriteLine("The position of the lawn mower #" + lawnMowerIndex +
-                                              " is invalid. Expected 2 numbers and a direction (N,S,E,W) separated by whitespace, for example: 1 2 N");
-                            Environment.Exit(0);
+                            FinishProgram("The position of the lawn mower #" + lawnMowerIndex +
+                                          " is invalid. Expected 2 numbers and a direction (N,S,E,W) separated by whitespace, for example: 1 2 N");
                         }
 
-                        var lawnMower = new LawnMower(x, y, heading);
+                        var lawnMower = new LawnMower(x, y, heading, fieldWidth, fieldHeight);
 
 
                         if (reader.EndOfStream)
                         {
-                            Console.WriteLine("No commands provided for lawn mower #" + lawnMowerIndex +
-                                              ". Expected a string with a combination of commands (L,R,M), for example: LMLMLMLMM");
-                            Environment.Exit(0);
+                            FinishProgram("No commands provided for lawn mower #" + lawnMowerIndex +
+                                          ". Expected a string with a combination of commands (L,R,M), for example: LMLMLMLMM");
                         }
 
-                        var commands = reader.ReadLine();
+                        var commands = readLine;
                         var success = lawnMower.ExecuteCommands(commands);
 
                         if (!success)
                         {
-                            Console.WriteLine("The commands provided for lawn mower #" + lawnMowerIndex +
-                                              "are invalid. Expected a string with a combination of commands (L,R,M) with no whitespaces, for example: LMLMLMLMM");
-                            Environment.Exit(0);
+                            FinishProgram("The commands provided for lawn mower #" + lawnMowerIndex +
+                                          "are invalid. Expected a string with a combination of commands (L,R,M) with no whitespaces, for example: LMLMLMLMM");
                         }
 
-                        writer.WriteLine(lawnMower.LawnMowerPosition.ToString());
+                        writer.WriteLine(lawnMower.GetPosition().ToString());
 
                         lawnMowerIndex++;
                     }
                 }
             }
+        }
+
+        private static void FinishProgram(string message)
+        {
+            Console.WriteLine(message);
+            Console.WriteLine("Press any key to finish");
+            Console.ReadLine();
+            Environment.Exit(0);
         }
     }
 

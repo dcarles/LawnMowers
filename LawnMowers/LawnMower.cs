@@ -12,11 +12,22 @@ namespace LawnMowers
         public enum Direction { N, E, S, W }
         public enum Command { L, R, M }
 
-        public LawnMowerPosition LawnMowerPosition { get; private set; }
-   
-        public LawnMower(int x, int y, Direction heading)
+        private LawnMowerPosition _lawnMowerPosition;
+        
+
+        private int _lawnWidth;
+        private int _lawnHeight;
+
+        public LawnMower(int x, int y, Direction heading, int rightBoundary, int topBoundary)
         {
-            LawnMowerPosition = new LawnMowerPosition(heading, x, y);
+            _lawnMowerPosition = new LawnMowerPosition(heading, x, y);
+            _lawnWidth = rightBoundary;
+            _lawnHeight = topBoundary;
+        }
+
+        public LawnMowerPosition GetPosition()
+        {
+            return _lawnMowerPosition;
         }
 
         public bool ExecuteCommands(string commands)
@@ -30,15 +41,33 @@ namespace LawnMowers
                 if (command == Command.L || command == Command.R)
                     ChangeDirection(command);
                 else
-                    Move(command);
+                    Move();
             }
 
             return true;
         }
 
-        private void Move(Command command)
+        private void Move()
         {
-            throw new NotImplementedException();
+            switch (_lawnMowerPosition.Heading)
+            {
+                case Direction.N:
+                    if (_lawnMowerPosition.Y + 1 <= _lawnHeight)
+                        _lawnMowerPosition.Y += 1;
+                    break;
+                case Direction.W:
+                    if (_lawnMowerPosition.X - 1 >= 0)
+                        _lawnMowerPosition.X -= 1;
+                    break;
+                case Direction.S:
+                    if (_lawnMowerPosition.Y - 1 >= 0)
+                        _lawnMowerPosition.Y -= 1;
+                    break;
+                case Direction.E:
+                    if (_lawnMowerPosition.X + 1 <= _lawnWidth)
+                        _lawnMowerPosition.X += 1;
+                    break;
+            }
         }
 
         private void ChangeDirection(Command command)
@@ -46,36 +75,36 @@ namespace LawnMowers
             switch (command)
             {
                 case Command.L:
-                    switch (LawnMowerPosition.Heading)
+                    switch (_lawnMowerPosition.Heading)
                     {
                         case Direction.N:
-                            LawnMowerPosition.Heading = Direction.W;
+                            _lawnMowerPosition.Heading = Direction.W;
                             break;
                         case Direction.W:
-                            LawnMowerPosition.Heading = Direction.S;
+                            _lawnMowerPosition.Heading = Direction.S;
                             break;
                         case Direction.S:
-                            LawnMowerPosition.Heading = Direction.E;
+                            _lawnMowerPosition.Heading = Direction.E;
                             break;
                         case Direction.E:
-                            LawnMowerPosition.Heading = Direction.N;
+                            _lawnMowerPosition.Heading = Direction.N;
                             break;
                     }
                     break;
                 case Command.R:
-                    switch (LawnMowerPosition.Heading)
+                    switch (_lawnMowerPosition.Heading)
                     {
                         case Direction.N:
-                            LawnMowerPosition.Heading = Direction.E;
+                            _lawnMowerPosition.Heading = Direction.E;
                             break;
                         case Direction.E:
-                            LawnMowerPosition.Heading = Direction.S;
+                            _lawnMowerPosition.Heading = Direction.S;
                             break;
                         case Direction.S:
-                            LawnMowerPosition.Heading = Direction.W;
+                            _lawnMowerPosition.Heading = Direction.W;
                             break;
                         case Direction.W:
-                            LawnMowerPosition.Heading = Direction.N;
+                            _lawnMowerPosition.Heading = Direction.N;
                             break;
                     }
                     break;
