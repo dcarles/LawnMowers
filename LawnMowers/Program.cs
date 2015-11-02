@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LawnMowers.Model;
 
 namespace LawnMowers
 {
@@ -14,8 +15,7 @@ namespace LawnMowers
         {
             if (args.Length == 0)
             {
-                Console.WriteLine("Invalid argument. Expected filename without extension");
-                Environment.Exit(0);
+                FinishProgram("Usage: LawnMowers.exe \"AbsoluteFilePath\"");
             }
 
             var inputFilePath = args[0];
@@ -23,8 +23,7 @@ namespace LawnMowers
 
             if (!File.Exists(inputFilePath))
             {
-                Console.WriteLine("The file path '" + inputFilePath + "' does not exists.");
-                Environment.Exit(0);
+                FinishProgram("The file path '" + inputFilePath + "' does not exists.");
             }
 
             MownTheLawn(inputFilePath);
@@ -47,42 +46,51 @@ namespace LawnMowers
                     }
 
                     var fieldSize = readLine.Split(' ');
-
-                    if (fieldSize.Length == 0)
+                    var fieldWidth = 0u;
+                    var fieldHeight = 0u;
+                
+                    if (fieldSize.Length < 2 || !uint.TryParse(fieldSize[0], out fieldWidth) ||
+                         !uint.TryParse(fieldSize[1], out fieldHeight))
                     {
-                        FinishProgram("Invalid first line in the input file. Expected 2 numbers separated by a whitespace, for example: 5 5");
+                        FinishProgram("The height/width of the Lawn is invalid. Expected 2 numbers separated by whitespace, for example: 5 5");
                     }
-
-                    var fieldWidth = int.Parse(fieldSize[0]);
-                    var fieldHeight = int.Parse(fieldSize[1]);
 
                     var lawnMowerIndex = 1;
                     while (!reader.EndOfStream)
                     {
-                        var position = readLine.Split(' ');
+                        var mowerLine = reader.ReadLine();
 
-                        var x = 0;
-                        var y = 0;
+                        if (mowerLine == null)
+                        {
+                            FinishProgram("The position of the lawn mower #" + lawnMowerIndex + " is not in the file");
+                            return;
+                        }
+
+                        var position = mowerLine.Split(' ');
+
+                        var x = 0u;
+                        var y = 0u;
                         var heading = LawnMower.Direction.N;
 
-                        if (position.Length < 3 || !int.TryParse(position[0], out x) ||
-                            !int.TryParse(position[1], out y) || !Enum.TryParse(position[2], out heading))
+                        if (position.Length < 3 || !uint.TryParse(position[0], out x) ||
+                            !uint.TryParse(position[1], out y) || !Enum.TryParse(position[2], out heading))
                         {
                             FinishProgram("The position of the lawn mower #" + lawnMowerIndex +
                                           " is invalid. Expected 2 numbers and a direction (N,S,E,W) separated by whitespace, for example: 1 2 N");
                         }
 
                         var lawnMower = new LawnMower(x, y, heading, fieldWidth, fieldHeight);
+                        
+                        var commandsLine = reader.ReadLine();
 
-
-                        if (reader.EndOfStream)
+                        if (commandsLine == null)
                         {
                             FinishProgram("No commands provided for lawn mower #" + lawnMowerIndex +
-                                          ". Expected a string with a combination of commands (L,R,M), for example: LMLMLMLMM");
+                                         ". Expected a string with a combination of commands (L,R,M), for example: LMLMLMLMM");
+                            return;
                         }
-
-                        var commands = readLine;
-                        var success = lawnMower.ExecuteCommands(commands);
+                     
+                        var success = lawnMower.ExecuteCommands(commandsLine);
 
                         if (!success)
                         {
@@ -96,10 +104,14 @@ namespace LawnMowers
                     }
                 }
             }
+
+            Console.WriteLine("");
+            Console.WriteLine("Output file with LawnMowers final positions was created successfully '" + outputFilePath + "'");
         }
 
         private static void FinishProgram(string message)
         {
+            Console.WriteLine("");
             Console.WriteLine(message);
             Console.WriteLine("Press any key to finish");
             Console.ReadLine();

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LawnMowers", "LawnMowers\La
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LawnMowers.Tests", "LawnMowers.Tests\LawnMowers.Tests.csproj", "{ADA5FB31-67D6-43F0-ABC5-F30FBF44F82D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LawnMowers.Model", "LawnMowers.Model\LawnMowers.Model.csproj", "{B7E784E8-CDA2-4DBB-8B15-F8A1847B5B68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{ADA5FB31-67D6-43F0-ABC5-F30FBF44F82D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADA5FB31-67D6-43F0-ABC5-F30FBF44F82D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADA5FB31-67D6-43F0-ABC5-F30FBF44F82D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7E784E8-CDA2-4DBB-8B15-F8A1847B5B68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7E784E8-CDA2-4DBB-8B15-F8A1847B5B68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7E784E8-CDA2-4DBB-8B15-F8A1847B5B68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7E784E8-CDA2-4DBB-8B15-F8A1847B5B68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

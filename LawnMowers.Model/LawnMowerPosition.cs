@@ -1,16 +1,16 @@
-namespace LawnMowers
+namespace LawnMowers.Model
 {
     public class LawnMowerPosition
     {
-        public LawnMowerPosition(LawnMower.Direction heading, int x, int y)
+        public LawnMowerPosition(LawnMower.Direction heading, uint x, uint y)
         {
             Heading = heading;
             X = x;
             Y = y;
         }
 
-        public int X { get; set; }
-        public int Y { get; set; }
+        public uint X { get; set; }
+        public uint Y { get; set; }
         public LawnMower.Direction Heading { get; set; }
 
         public override string ToString()
